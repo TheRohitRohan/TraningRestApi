@@ -13,40 +13,38 @@ function getErrorStatement($status, $message) {
     exit();
 }
 
-$input_data = json_decode(file_get_contents("php://input"), true);
+$request_method = $_SERVER["REQUEST_METHOD"];
 
-if(isset($input_data['id'])){
-    $id = $input_data['id'];
-    $stmt = mysqli_stmt_init($conn);
-    $query = "SELECT * FROM `students` WHERE stu_id=?";
+if ($request_method == "GET") {
+    if(isset($_GET['id'])){
+        $id = $_GET['id'];
+        $stmt = mysqli_stmt_init($conn);
+        $query = "SELECT * FROM `students` WHERE stu_id=?";
 
-    if (!mysqli_stmt_prepare($stmt, $query)) {
-        getErrorStatement(500, 'Error in Preparing Statement : '.mysqli_error($conn));
-    }
+        if (!mysqli_stmt_prepare($stmt, $query)) {
+            getErrorStatement(500, 'Error in Preparing Statement : '.mysqli_error($conn));
+        }
 
-    if (!mysqli_stmt_bind_param($stmt, "s", $id)){
-        getErrorStatement(500, 'Error in Binding Parameters : '.mysqli_error($conn));
-    }
+        if (!mysqli_stmt_bind_param($stmt, "s", $id)){
+            getErrorStatement(500, 'Error in Binding Parameters : '.mysqli_error($conn));
+        }
 
-    if (!mysqli_stmt_execute($stmt)) {
-        getErrorStatement(500, 'Error in executing Prepared Statement : '.mysqli_error($conn));
-    }
-    $query_run = mysqli_stmt_get_result($stmt);
-    
-    $request_method = $_SERVER["REQUEST_METHOD"];
+        if (!mysqli_stmt_execute($stmt)) {
+            getErrorStatement(500, 'Error in executing Prepared Statement : '.mysqli_error($conn));
+        }
+        $query_run = mysqli_stmt_get_result($stmt);
 
-    if ($query_run) {
-        if($request_method == "GET") {
+        if ($query_run) {
             if (mysqli_num_rows($query_run) > 0) {
                 $res = mysqli_fetch_assoc($query_run);
                 $null_columns = array();
                 foreach ($res as $column => $value) {
-                    if (empty($value) || $value == 0) {
+                    if (empty($value) || $value === null) {
                         $null_columns[] = $column;
                     }
                 }
                 if(empty($null_columns)){
-                    getErrorStatement(500, 'No null or empty values found to update');
+                    getErrorStatement(200, 'No null or empty values found');
                 }
                 else{
                     $data = [
@@ -60,39 +58,42 @@ if(isset($input_data['id'])){
                 getErrorStatement(404, 'No data Found');
             }
         }
-        elseif($request_method == "PUT") {
-            if (mysqli_num_rows($query_run) > 0) {
-                $res = mysqli_fetch_assoc($query_run);
-                $update_columns = array();
-                foreach ($res as $column => $value) {
-                    if ((empty($value) || $value == 0) && isset($input_data[$column])) {
-                        $update_columns[] = "$column = '$input_data[$column]'";
-                    }
-                }
-                if (!empty($update_columns)) {
-                    $update_query = "UPDATE `students` SET " . implode(",", $update_columns) . " WHERE stu_id=$id";
-                    $update_result = mysqli_query($conn, $update_query);
-                    if ($update_result) {
-                        getErrorStatement(200, 'Data Updated Successfully');
-                    } else {
-                        getErrorStatement(500, 'Internal Server Error');
-                    }
-                } else {
-                    getErrorStatement(400, 'No null or empty values found to update');
-                }
-            } 
-            else {
-                getErrorStatement(404, 'No data Found');
-            }
-        }
         else{
-            getErrorStatement(405, $request_method .'Method Not Allowed');
+            getErrorStatement(500, 'Error in query execution');
         }
     }
     else{
-        getErrorStatement(500, 'error in query execution');
+        getErrorStatement(400, 'Enter Student Id');
     }
 }
-else{
-    getErrorStatement(400, 'Enter Student Id');
+elseif ($request_method == "PUT") {
+    $input_data = json_decode(file_get_contents("php://input"), true);
+
+    if (isset($input_data['id'])) {
+        $id = $input_data['id'];
+        unset($input_data['id']);
+
+        if (empty($input_data)) {
+            getErrorStatement(400, 'No data provided to update');
+        }
+
+        $update_columns = array();
+        foreach ($input_data as $column => $value) {
+            $update_columns[] = "$column = '$value'";
+        }
+
+        $update_query = "UPDATE `students` SET " . implode(", ", $update_columns) . " WHERE stu_id=$id";
+        $update_result = mysqli_query($conn, $update_query);
+
+        if ($update_result) {
+            getErrorStatement(200, 'Data Updated Successfully');
+        } else {
+            getErrorStatement(500, 'Internal Server Error');
+        }
+    } else {
+        getErrorStatement(400, 'Enter Student Id');
+    }
+}
+else {
+    getErrorStatement(405, $request_method . ' Method Not Allowed');
 }
