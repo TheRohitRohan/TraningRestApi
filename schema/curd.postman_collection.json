@@ -1,0 +1,155 @@
+{
+	"info": {
+		"_postman_id": "3513439b-dcbc-4edb-9f4d-243a85bf48dc",
+		"name": "curd",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "34725690"
+	},
+	"item": [
+		{
+			"name": "add new data",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "name",
+							"value": "sohan",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "sohan@gmail.com",
+							"type": "text"
+						},
+						{
+							"key": "phone",
+							"value": "952368741",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost/demoapi/Task-1/curd_operation.php",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"demoapi",
+						"Task-1",
+						"curd_operation.php"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get perticular data",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost/demoapi/Task-1/curd_operation.php?id=1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"demoapi",
+						"Task-1",
+						"curd_operation.php"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get all data",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost/demoapi/Task-1/curd_operation.php",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"demoapi",
+						"Task-1",
+						"curd_operation.php"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update data",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\":\"12\",\r\n    \"name\":\"sohit\",\r\n    \"email\":\"sohit111@gmail.com\",\r\n    \"phone\":\"5236978412\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost/demoapi/Task-1/curd_operation.php",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"demoapi",
+						"Task-1",
+						"curd_operation.php"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete data",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "http://localhost/demoapi/Task-1/curd_operation.php?id=16",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"demoapi",
+						"Task-1",
+						"curd_operation.php"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "16"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
