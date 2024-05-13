@@ -1,0 +1,767 @@
+{
+	"info": {
+		"_postman_id": "3513439b-dcbc-4edb-9f4d-243a85bf48dc",
+		"name": "curd",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "34725690"
+	},
+	"item": [
+		{
+			"name": "add new data",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const Ajv = require('ajv');\r",
+							"const ajv = new Ajv();\r",
+							"\r",
+							"const schema = {\r",
+							"    \"type\": \"object\",\r",
+							"    \"properties\": {\r",
+							"        \"name\": {\r",
+							"            \"type\": \"string\"\r",
+							"        },\r",
+							"        \"email\": {\r",
+							"            \"type\": \"string\",\r",
+							"            \"format\": \"email\"\r",
+							"        },\r",
+							"        \"phone\": {\r",
+							"            \"type\": \"string\"\r",
+							"        }\r",
+							"    },\r",
+							"    \"required\": [\"name\", \"email\", \"phone\"]\r",
+							"};\r",
+							"\r",
+							"const formData = pm.request.body.formdata.reduce((acc, { key, value }) => {\r",
+							"    acc[key] = value;\r",
+							"    return acc;\r",
+							"}, {});\r",
+							"\r",
+							"const validate = ajv.compile(schema);\r",
+							"const isValid = validate(formData);\r",
+							"\r",
+							"const isFormData = pm.request.body.mode === 'formdata';\r",
+							"\r",
+							"pm.test('Request Data Format Check', function () {\r",
+							"    pm.expect(isFormData).to.be.true;\r",
+							"});\r",
+							"\r",
+							"pm.test('Request Data Validation', function () {\r",
+							"    pm.expect(isValid).to.be.true;\r",
+							"    if (!isValid) {\r",
+							"        pm.expect.fail('Request data validation failed');\r",
+							"    }\r",
+							"});\r",
+							"\r",
+							"pm.test('Name length check', function () {\r",
+							"    const name = formData.name;\r",
+							"    pm.expect(name.length).to.be.within(1, 50);\r",
+							"});\r",
+							"\r",
+							"pm.test('Email format check', function () {\r",
+							"    const email = formData.email;\r",
+							"    pm.expect(email).to.match(/^.+@.+\\..+$/);\r",
+							"});\r",
+							"\r",
+							"pm.test('Phone number format check', function () {\r",
+							"    const phone = formData.phone;\r",
+							"    pm.expect(phone).to.match(/^\\d{10}$/);\r",
+							"});\r",
+							"\r",
+							"pm.test('Name is not empty', function () {\r",
+							"    const name = formData.name;\r",
+							"    pm.expect(name).to.not.be.empty;\r",
+							"});\r",
+							"\r",
+							"pm.test('Email is not empty', function () {\r",
+							"    const email = formData.email;\r",
+							"    pm.expect(email).to.not.be.empty;\r",
+							"});\r",
+							"\r",
+							"pm.test('Phone number is not empty', function () {\r",
+							"    const phone = formData.phone;\r",
+							"    pm.expect(phone).to.not.be.empty;\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const Ajv = require('ajv');\r",
+							"const ajv = new Ajv();\r",
+							"\r",
+							"const schema = {\r",
+							"    \"type\": \"object\",\r",
+							"    \"properties\": {\r",
+							"        \"status\": {\r",
+							"            \"type\": \"integer\",\r",
+							"            \"const\": 200 \r",
+							"        },\r",
+							"        \"message\": {\r",
+							"            \"type\": \"string\"\r",
+							"        }\r",
+							"    },\r",
+							"    \"required\": [\"status\", \"message\"]\r",
+							"};\r",
+							"\r",
+							"const validate = ajv.compile(schema);\r",
+							"const isValid = validate(pm.response.json());\r",
+							"\r",
+							"pm.test('Response Body Validation', function () {\r",
+							"    pm.expect(isValid).to.be.true;\r",
+							"    if (!isValid) {\r",
+							"        pm.expect.fail('Response body validation failed');\r",
+							"    }\r",
+							"});\r",
+							"\r",
+							"pm.test('Status code is 201', function () {\r",
+							"    pm.expect(pm.response.code).to.equal(200);\r",
+							"});\r",
+							"\r",
+							"pm.test('Message is not empty', function () {\r",
+							"    const message = pm.response.json().message;\r",
+							"    pm.expect(message).to.not.be.empty; \r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "name",
+							"value": "mohan",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "mohan@gmail.com",
+							"type": "text"
+						},
+						{
+							"key": "phone",
+							"value": "7895236412",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost/demoapi/Task-1/curd_operation.php",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"demoapi",
+						"Task-1",
+						"curd_operation.php"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get perticular data",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const Ajv = require('ajv');\r",
+							"const ajv = new Ajv();\r",
+							"\r",
+							"const schema = {\r",
+							"    \"type\": \"object\",\r",
+							"    \"properties\": {\r",
+							"        \"status\": {\r",
+							"            \"type\": \"integer\"\r",
+							"        },\r",
+							"        \"message\": {\r",
+							"            \"type\": \"string\"\r",
+							"        },\r",
+							"        \"data\": {\r",
+							"            \"type\": \"object\",\r",
+							"            \"properties\": {\r",
+							"                \"id\": {\r",
+							"                    \"type\": \"integer\"\r",
+							"                },\r",
+							"                \"name\": {\r",
+							"                    \"type\": \"string\"\r",
+							"                },\r",
+							"                \"email\": {\r",
+							"                    \"type\": \"string\",\r",
+							"                    \"format\": \"email\"\r",
+							"                },\r",
+							"                \"phone\": {\r",
+							"                    \"type\": \"string\"\r",
+							"                }\r",
+							"            },\r",
+							"            \"required\": [\"id\", \"name\", \"email\", \"phone\"]\r",
+							"        }\r",
+							"    },\r",
+							"    \"required\": [\"status\", \"message\", \"data\"]\r",
+							"};\r",
+							"\r",
+							"const validate = ajv.compile(schema);\r",
+							"const isValid = validate(pm.response.json());\r",
+							"\r",
+							"pm.test(\"Schema match\", function () {\r",
+							"    pm.expect(isValid).to.be.true;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response Status Code Validation\", function () {\r",
+							"    pm.expect(pm.response.code).to.equal(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Message type check\", function () {\r",
+							"    pm.expect(pm.response.json().message).to.be.a('string');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Data type check\", function () {\r",
+							"    pm.expect(pm.response.json().data).to.be.an('object');\r",
+							"});\r",
+							"\r",
+							"// Data object has required fields and non-empty values\r",
+							"if (pm.response.json().data) {\r",
+							"    const customer = pm.response.json().data;\r",
+							"\r",
+							"    pm.test(`Customer - Id Validation`, function () {\r",
+							"        pm.expect(customer).to.have.property('id').that.is.a('number').and.not.oneOf([null, 0]);\r",
+							"    });\r",
+							"\r",
+							"    pm.test(`Customer - Name Validation`, function () {\r",
+							"        pm.expect(customer).to.have.property('name').that.is.a('string').and.not.oneOf([null, \"\"]);\r",
+							"    });\r",
+							"\r",
+							"    pm.test(`Customer - Email Validation`, function () {\r",
+							"        pm.expect(customer).to.have.property('email').that.is.a('string').and.to.match(/^.+@.+\\..+$/);\r",
+							"    });\r",
+							"\r",
+							"    pm.test(`Customer - Phone Validation`, function () {\r",
+							"        pm.expect(customer).to.have.property('phone').that.is.a('string').and.not.oneOf([null, \"\"]);\r",
+							"    });\r",
+							"}\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"\r",
+							"const Ajv = require('ajv');\r",
+							"const ajv = new Ajv();\r",
+							"\r",
+							"const schema = {\r",
+							"    \"type\": \"object\",\r",
+							"    \"properties\": {\r",
+							"        \"id\": {\r",
+							"            \"type\": \"integer\"\r",
+							"        }\r",
+							"    },\r",
+							"    \"required\": [\"id\"]\r",
+							"};\r",
+							"\r",
+							"const id = parseInt(pm.request.url.query.get('id'));\r",
+							"const validate = ajv.compile(schema);\r",
+							"const isValid = validate({ id });\r",
+							"\r",
+							"pm.test('Request Parameters Validation', function () {\r",
+							"    pm.expect(isValid).to.be.true;\r",
+							"    if (!isValid) {\r",
+							"        pm.expect.fail('Request parameters validation failed');\r",
+							"    }\r",
+							"});\r",
+							"\r",
+							"const idParamExists = pm.request.url.query.has('id');\r",
+							"pm.test('ID Parameter Check', function () {\r",
+							"    pm.expect(idParamExists).to.be.true;\r",
+							"});\r",
+							"\r",
+							"pm.test('ID is an integer', function () {\r",
+							"    pm.expect(id).to.be.a('number');\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost/demoapi/Task-1/curd_operation.php?id=1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"demoapi",
+						"Task-1",
+						"curd_operation.php"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get all data",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const Ajv = require('ajv');\r",
+							"const ajv = new Ajv();\r",
+							"\r",
+							"const schema = {\r",
+							"    \"type\": \"object\",\r",
+							"    \"properties\": {\r",
+							"        \"status\": {\r",
+							"            \"type\": \"integer\"\r",
+							"        },\r",
+							"        \"message\": {\r",
+							"            \"type\": \"string\"\r",
+							"        },\r",
+							"        \"data\": {\r",
+							"            \"type\": \"array\",\r",
+							"            \"items\": {\r",
+							"                \"type\": \"object\",\r",
+							"                \"properties\": {\r",
+							"                    \"id\": {\r",
+							"                        \"type\": \"string\"\r",
+							"                    },\r",
+							"                    \"name\": {\r",
+							"                        \"type\": \"string\"\r",
+							"                    },\r",
+							"                    \"email\": {\r",
+							"                        \"type\": \"string\",\r",
+							"                        \"format\": \"email\"\r",
+							"                    },\r",
+							"                    \"phone\": {\r",
+							"                        \"type\": \"string\"\r",
+							"                    }\r",
+							"                },\r",
+							"                \"required\": [\"id\", \"name\", \"email\", \"phone\"]\r",
+							"            }\r",
+							"        }\r",
+							"    },\r",
+							"    \"required\": [\"status\", \"message\", \"data\"]\r",
+							"};\r",
+							"\r",
+							"const validate = ajv.compile(schema);\r",
+							"const isValid = validate(pm.response.json());\r",
+							"\r",
+							"pm.test(\"Schema match\", function () {\r",
+							"    pm.expect(isValid).to.be.true;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response Status Code Validation\", function () {\r",
+							"    pm.expect(pm.response.code).to.equal(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Message type check\", function () {\r",
+							"    pm.expect(pm.response.json().message).to.be.a('string');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Data type check\", function () {\r",
+							"    pm.expect(pm.response.json().data).to.be.an('array');\r",
+							"});\r",
+							"\r",
+							"if (pm.response.json().data.length > 0) {\r",
+							"    pm.response.json().data.forEach((customer) => {\r",
+							"        const customerId = customer.id;\r",
+							"\r",
+							"        pm.test(`Customer ${customerId} - Id Validation`, function () {\r",
+							"            pm.expect(customer).to.have.property('id').that.is.a('string').and.not.oneOf([null, \"\"]);\r",
+							"        });\r",
+							"\r",
+							"        pm.test(`Customer ${customerId} - Name Validation`, function () {\r",
+							"            pm.expect(customer).to.have.property('name').that.is.a('string').and.not.oneOf([null, \"\"]);\r",
+							"        });\r",
+							"\r",
+							"        pm.test(`Customer ${customerId} - Email Validation`, function () {\r",
+							"            pm.expect(customer).to.have.property('email').that.is.a('string').and.to.match(/^.+@.+\\..+$/);\r",
+							"        });\r",
+							"\r",
+							"        pm.test(`Customer ${customerId} - Phone Validation`, function () {\r",
+							"            pm.expect(customer).to.have.property('phone').that.is.a('string').and.not.oneOf([null, \"\"]);\r",
+							"        });\r",
+							"    });\r",
+							"}\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost/demoapi/Task-1/curd_operation.php",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"demoapi",
+						"Task-1",
+						"curd_operation.php"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update data",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const Ajv = require('ajv');\r",
+							"const ajv = new Ajv();\r",
+							"\r",
+							"const schema = {\r",
+							"    \"type\": \"object\",\r",
+							"    \"properties\": {\r",
+							"        \"status\": {\r",
+							"            \"type\": \"integer\",\r",
+							"            \"const\": 200 \r",
+							"        },\r",
+							"        \"message\": {\r",
+							"            \"type\": \"string\"\r",
+							"        }\r",
+							"    },\r",
+							"    \"required\": [\"status\", \"message\"]\r",
+							"};\r",
+							"\r",
+							"const validate = ajv.compile(schema);\r",
+							"const isValid = validate(pm.response.json());\r",
+							"\r",
+							"pm.test('Response Body Validation', function () {\r",
+							"    pm.expect(isValid).to.be.true;\r",
+							"    if (!isValid) {\r",
+							"        pm.expect.fail('Response body validation failed');\r",
+							"    }\r",
+							"});\r",
+							"\r",
+							"pm.test('Status code is 200', function () {\r",
+							"    pm.expect(pm.response.code).to.equal(200);\r",
+							"});\r",
+							"\r",
+							"pm.test('Message is not empty', function () {\r",
+							"    const message = pm.response.json().message;\r",
+							"    pm.expect(message).to.not.be.empty;\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const Ajv = require('ajv');\r",
+							"const ajv = new Ajv();\r",
+							"\r",
+							"const schema = {\r",
+							"    \"type\": \"object\",\r",
+							"    \"properties\": {\r",
+							"        \"id\": {\r",
+							"            \"type\": \"string\"\r",
+							"        },\r",
+							"        \"name\": {\r",
+							"            \"type\": \"string\"\r",
+							"        },\r",
+							"        \"email\": {\r",
+							"            \"type\": \"string\",\r",
+							"            \"format\": \"email\"\r",
+							"        },\r",
+							"        \"phone\": {\r",
+							"            \"type\": \"string\"\r",
+							"        }\r",
+							"    },\r",
+							"    \"required\": [\"id\", \"name\", \"email\", \"phone\"]\r",
+							"};\r",
+							"\r",
+							"const requestData = JSON.parse(pm.request.body.raw.replace(/{{(.*?)}}/g, (_, key) => pm.variables.get(key)));\r",
+							"\r",
+							"const validate = ajv.compile(schema);\r",
+							"const isValid = validate(requestData);\r",
+							"\r",
+							"// Check if the request body is sent as raw text\r",
+							"const isRawText = pm.request.body.mode === 'raw';\r",
+							"\r",
+							"pm.test('Request Data Format Check', function () {\r",
+							"    pm.expect(isRawText).to.be.true;\r",
+							"});\r",
+							"\r",
+							"pm.test('Schema Validation', function () {\r",
+							"    pm.expect(isValid).to.be.true;\r",
+							"    if (!isValid) {\r",
+							"        console.log(ajv.errors);\r",
+							"        pm.expect.fail('Schema validation failed');\r",
+							"    }\r",
+							"});\r",
+							"pm.test('ID is a non-empty string', function () {\r",
+							"    pm.expect(requestData.id).to.be.a('string').and.not.oneOf([\"null\", \"\", \"0\"]);\r",
+							"});\r",
+							"\r",
+							"pm.test('Name is a non-empty string', function () {\r",
+							"    pm.expect(requestData.name).to.be.a('string').and.not.oneOf([\"null\", \"\", \"0\"]);\r",
+							"});\r",
+							"\r",
+							"pm.test('Email is in valid format if provided', function () {\r",
+							"    if (requestData.email) {\r",
+							"        pm.expect(requestData.email).to.match(/^.+@.+\\..+$/);\r",
+							"    }\r",
+							"});\r",
+							"\r",
+							"pm.test('Phone is a non-empty string if provided', function () {\r",
+							"    if (requestData.phone) {\r",
+							"        pm.expect(requestData.phone).to.be.a('string').and.not.oneOf([\"null\", \"\", \"0\"]);\r",
+							"    }\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\":\"{{id}}\",\r\n    \"name\":\"{{name}}\",\r\n    \"email\":\"{{email}}\",\r\n    \"phone\":\"{{phone}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost/demoapi/Task-1/curd_operation.php",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"demoapi",
+						"Task-1",
+						"curd_operation.php"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete data",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const Ajv = require('ajv');\r",
+							"const ajv = new Ajv();\r",
+							"\r",
+							"const schema = {\r",
+							"    \"type\": \"object\",\r",
+							"    \"properties\": {\r",
+							"        \"id\": {\r",
+							"            \"type\": \"integer\"\r",
+							"        }\r",
+							"    },\r",
+							"    \"required\": [\"id\"]\r",
+							"};\r",
+							"\r",
+							"const id = Number(pm.variables.get('id'));\r",
+							"\r",
+							"const validate = ajv.compile(schema);\r",
+							"const isValid = validate({ id });\r",
+							"\r",
+							"pm.test('Request Data Validation', function () {\r",
+							"    pm.expect(isValid).to.be.true;\r",
+							"    if (!isValid) {\r",
+							"        pm.expect.fail('Request data validation failed');\r",
+							"    }\r",
+							"});\r",
+							"\r",
+							"pm.test('ID is an integer', function () {\r",
+							"    pm.expect(id).to.be.a('number');\r",
+							"});\r",
+							"\r",
+							"// Additional checks for null, 0, and empty string\r",
+							"pm.test('ID is not null', function () {\r",
+							"    pm.expect(id).to.not.equal(null);\r",
+							"});\r",
+							"\r",
+							"pm.test('ID is not zero', function () {\r",
+							"    pm.expect(id).to.not.equal(0);\r",
+							"});\r",
+							"\r",
+							"pm.test('ID is not an empty string', function () {\r",
+							"    pm.expect(String(id)).to.not.equal('');\r",
+							"});\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"// const Ajv = require('ajv');\r",
+							"// const ajv = new Ajv();\r",
+							"\r",
+							"// const schema = {\r",
+							"//     \"type\": \"object\",\r",
+							"//     \"properties\": {\r",
+							"//         \"id\": {\r",
+							"//             \"type\": \"integer\"\r",
+							"//         }\r",
+							"//     },\r",
+							"//     \"required\": [\"id\"]\r",
+							"// };\r",
+							"\r",
+							"// const id = parseInt(pm.request.url.query.get('id'));\r",
+							"// const validate = ajv.compile(schema);\r",
+							"// const isValid = validate({ id });\r",
+							"\r",
+							"// pm.test('Request Parameters Validation', function () {\r",
+							"//     pm.expect(isValid).to.be.true;\r",
+							"//     if (!isValid) {\r",
+							"//         pm.expect.fail('Request parameters validation failed');\r",
+							"//     }\r",
+							"// });\r",
+							"\r",
+							"// const idParamExists = pm.request.url.query.has('id');\r",
+							"// pm.test('ID Parameter Check', function () {\r",
+							"//     pm.expect(idParamExists).to.be.true;\r",
+							"// });\r",
+							"\r",
+							"// pm.test('ID is an integer', function () {\r",
+							"//     pm.expect(id).to.be.a('number');\r",
+							"// });\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const Ajv = require('ajv');\r",
+							"const ajv = new Ajv();\r",
+							"\r",
+							"const schema = {\r",
+							"    \"type\": \"object\",\r",
+							"    \"properties\": {\r",
+							"        \"status\": {\r",
+							"            \"type\": \"integer\",\r",
+							"            \"const\": 200 \r",
+							"        },\r",
+							"        \"message\": {\r",
+							"            \"type\": \"string\"\r",
+							"        }\r",
+							"    },\r",
+							"    \"required\": [\"status\", \"message\"]\r",
+							"};\r",
+							"\r",
+							"const validate = ajv.compile(schema);\r",
+							"const isValid = validate(pm.response.json());\r",
+							"\r",
+							"pm.test('Response Body Validation', function () {\r",
+							"    pm.expect(isValid).to.be.true;\r",
+							"    if (!isValid) {\r",
+							"        pm.expect.fail('Response body validation failed');\r",
+							"    }\r",
+							"});\r",
+							"\r",
+							"pm.test('Status code is 201', function () {\r",
+							"    pm.expect(pm.response.code).to.equal(200);\r",
+							"});\r",
+							"\r",
+							"pm.test('Message is not empty', function () {\r",
+							"    const message = pm.response.json().message;\r",
+							"    pm.expect(message).to.not.be.empty;\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\":\"{{id}}\",\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost/demoapi/Task-1/curd_operation.php",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"demoapi",
+						"Task-1",
+						"curd_operation.php"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

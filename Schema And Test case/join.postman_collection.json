@@ -1,0 +1,110 @@
+{
+	"info": {
+		"_postman_id": "82c299c4-1903-4c9e-a7f4-c905a05ead02",
+		"name": "join",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "34725690"
+	},
+	"item": [
+		{
+			"name": "inner_join",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost/demoapi/Task-2/inner_join.php",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"demoapi",
+						"Task-2",
+						"inner_join.php"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "left_join",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost/demoapi/Task-2/left_join.php",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"demoapi",
+						"Task-2",
+						"left_join.php"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "right_join",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost/demoapi/Task-2/right_join.php",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"demoapi",
+						"Task-2",
+						"right_join.php"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "full_join",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost/demoapi/Task-2/full_join.php",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"demoapi",
+						"Task-2",
+						"full_join.php"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "cross_join",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost/demoapi/Task-2/cross_join.php",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"demoapi",
+						"Task-2",
+						"cross_join.php"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

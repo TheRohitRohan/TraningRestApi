@@ -1,0 +1,71 @@
+{
+	"info": {
+		"_postman_id": "252682e0-1698-469c-9ad3-2cad3cc5b1b8",
+		"name": "empty",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "34725690"
+	},
+	"item": [
+		{
+			"name": "get empty field",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\":\"9\",\r\n    \"stu_name\":\"sohan\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost/demoapi/Task-3/empty_values_operation.php",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"demoapi",
+						"Task-3",
+						"empty_values_operation.php"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update empty field",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\":\"9\",\r\n    \"stu_name\":\"sohan\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost/demoapi/Task-3/empty_values_operation.php",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"demoapi",
+						"Task-3",
+						"empty_values_operation.php"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
